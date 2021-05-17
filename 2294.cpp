@@ -5,7 +5,8 @@
 */
 
 /*
-1- Formar o grafo
+ISSUE -> change matrix alocation
+1- Formar o grafo 
 2- Fazer busca em profundidade
 3- Pegar menor distancia do duende até uma saída
 */
@@ -23,7 +24,7 @@ int main(){
     vector<int> exit;
     cin >> n >> m;
 
-    pair<int,int> field[n][m];
+    pair<int,int> field[100][100];
 
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
@@ -38,39 +39,26 @@ int main(){
         }
     }
 
-    int grafo[n*m][n*m];
+    int grafo[100][100];
 
-    memset(grafo, 0, sizeof(int)*n*m*n*m);
+    memset(grafo, 0, sizeof(int)*100*100);
 
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
             if(field[i][j].first!=2){
-                if(i==n-1 && j==m-1){
-                    continue;
-                }
-                else if(i==n-1 && field[i][j+1].first !=2){
+                if(j<m-1 && field[i][j+1].first !=2){
                     grafo[field[i][j].second][field[i][j+1].second]=1;
                     grafo[field[i][j+1].second][field[i][j].second]=1;
                 }
-                else if(j==m-1 && field[i+1][j].first!=2){
+                if(i<n-1 && field[i+1][j].first!=2){
                     grafo[field[i][j].second][field[i+1][j].second]=1;
                     grafo[field[i+1][j].second][field[i][j].second]=1;
-                }
-                else{
-                    if(field[i][j+1].first !=2){
-                        grafo[field[i][j].second][field[i][j+1].second]=1;
-                        grafo[field[i][j+1].second][field[i][j].second]=1;
-                    }
-                    if(field[i+1][j].first!=2){
-                        grafo[field[i][j].second][field[i+1][j].second]=1;
-                        grafo[field[i+1][j].second][field[i][j].second]=1;
-                    }
                 }
             }
         }
     }
 
-    vector<int> dist(n*m,999);
+    vector<int> dist(100,999);
 
     dist.at(start)=0;
     queue<int> q;
@@ -79,7 +67,7 @@ int main(){
         int u = q.front();
         q.pop();
         for(int i=0; i<n*m; i++){
-            if(dist[i]==999 && grafo[u][i]==1){
+            if(dist[i]==999 && grafo[u][i]){
                 dist[i] = dist[u]+1;
                 q.push(i);
             }
